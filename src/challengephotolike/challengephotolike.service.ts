@@ -13,6 +13,9 @@ export class ChallengephotolikeService {
 
   async findAll(): Promise<ChallengePhotoLikeDto[]> {
     const challengephotolike = await this.challengePhotolikeRepository.find();
+    if (!challengephotolike) {
+      throw new NotFoundException('There are no challengephotolike');
+    }
     return challengephotolike;
   }
 

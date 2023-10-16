@@ -24,6 +24,10 @@ export class ParticipantService {
     //   userId: participant.userId,
     //   challenge: participant.challenge.id,
     // }));
+
+    if (!participants) {
+      throw new NotFoundException('There are no participants');
+    }
     return participants;
   }
 

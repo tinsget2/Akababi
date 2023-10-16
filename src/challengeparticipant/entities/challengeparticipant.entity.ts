@@ -22,13 +22,14 @@ export class ChallengeParticipant {
   @Column()
   challengeId: number;
 
-  @OneToOne(() => ChallengePhotoPost)
-  @JoinColumn()
-  challengePhotoPost: ChallengePhotoPost;
+  // @OneToOne(() => ChallengePhotoPost)
+  // @JoinColumn({ name: 'ChallengePhotoPostid', referencedColumnName: 'id' })
+  // challengePhotoPost: ChallengePhotoPost;
 
   // @OneToOne(
   //   () => ChallengePhotoPost,
   //   (challengePhotoPost) => challengePhotoPost.participant,
+  //   { cascade: true },
   // )
   // @JoinColumn()
   // challenegePhotoPost: ChallengePhotoPost;

@@ -6,12 +6,6 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 export class ChallengePhotoLike {
   @PrimaryGeneratedColumn()
   id: number;
-  // @Column()
-  // challengeId: number;
-
-  // @Column()
-  // photoUrl: string;
-
   @Column({ default: 0 })
   like: number;
 

@@ -18,6 +18,9 @@ export class InvitationService {
 
   async findAll(): Promise<InvitationDto[]> {
     const invitations = await this.invitationRepository.find();
+    if (!invitations) {
+      throw new NotFoundException('There are no invitations');
+    }
     return invitations;
   }
 

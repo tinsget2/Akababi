@@ -3,6 +3,7 @@ import { ChallengePhotoLike } from 'src/challengephotolike/entities/challengepho
 import {
   Column,
   Entity,
+  JoinColumn,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -13,20 +14,15 @@ export class ChallengePhotoPost {
   @PrimaryGeneratedColumn()
   id: number;
 
-  // @Column()
-  // userId: number;
-
-  // @Column()
-  // challengeId: number;
-
   @Column()
   challengePhotoUrl: string;
 
-  // @OneToOne(
-  //   () => ChallengeParticipant,
-  //   (participant) => participant.challenegePhotoPost,
-  // )
-  // participant: ChallengeParticipant;
+  @OneToOne(() => ChallengeParticipant)
+  @JoinColumn()
+  challengeParticipant: ChallengeParticipant;
+
+  @Column()
+  challengeParticipantId: number;
 
   @OneToMany(
     () => ChallengePhotoLike,

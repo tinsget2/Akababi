@@ -13,8 +13,11 @@ export class ChallengepostphotoService {
 
   async findAll(): Promise<ChallengePhotoPostDto[]> {
     const challengePhotoPost = await this.challengePhotoPostRepository.find({
-      relations: ['challengePhotoLike'],
+      relations: ['challengePhotoLike', 'challengeParticipant'],
     });
+    if (!challengePhotoPost) {
+      throw new NotFoundException('There are no contents');
+    }
     return challengePhotoPost;
   }
 
