@@ -32,10 +32,19 @@ export class UserService {
     return user;
   }
 
-  async create(userDto: UserDto): Promise<UserDto> {
+  async create(userDto: UserDto): Promise<UserDto | any> {
     const newUser = this.userRepository.create(userDto);
+    const existingUser = await this.userRepository.findOne({
+      where: { email: userDto.email },
+    });
+    if (existingUser) {
+      return { message: `User with email ${userDto.email} already exists` };
+    }
     await this.userRepository.save(newUser);
-    return newUser;
+    return {
+      message: `User created successfully`,
+      user: newUser,
+    };
   }
 
   async update(id: number, userDto: UserDto): Promise<UserDto> {

@@ -8,22 +8,31 @@ import { InvitationModule } from './invitation/invitation.module';
 import { ChallengepostphotoModule } from './challengepostphoto/challengepostphoto.module';
 import { ChallengephotolikeModule } from './challengephotolike/challengephotolike.module';
 import { AdvertismentModule } from './advertisment/advertisment.module';
-import { UserController } from './user/user.controller';
-import { UserService } from './user/user.service';
 import { UserModule } from './user/user.module';
-
+import { CommentModule } from './comment/comment.module';
+import { PostsModule } from './posts/posts.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 6033,
-      username: 'root',
-      password: 'my_secret_password',
-      database: 'Jagama',
-      autoLoadEntities: true,
-      synchronize: true,
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      isGlobal: true,
     }),
+
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        type: configService.get('DATABASE_TYPE') as any | 'mysql',
+        host: configService.get('HOST'),
+        port: configService.get('DB_PORT'),
+        username: configService.get('DB_USERNAME'),
+        password: configService.get('DATABASE_PASSWORD'),
+        database: configService.get('DATABASE_NAME').toString(),
+        autoLoadEntities: true,
+        synchronize: true,
+      }),
+    }),
+
     ChallengeModule,
     ParticipantModule,
     InvitationModule,
@@ -32,6 +41,8 @@ import { UserModule } from './user/user.module';
     ChallengephotolikeModule,
     AdvertismentModule,
     UserModule,
+    CommentModule,
+    PostsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

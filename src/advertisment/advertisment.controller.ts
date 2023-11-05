@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { AdvertismentService } from './advertisment.service';
 import { AdvertismentDto } from './dto/ad.dto';
 import { Advertisment } from './entities/ad.entity';
@@ -10,7 +10,7 @@ export class AdvertismentController {
   @Get()
   async findAll(): Promise<AdvertismentDto[]> {
     const advertisments = await this.advertismentService.findAll();
-    return advertisments.map((ad) => this.toDTO(ad));
+    return advertisments;
   }
 
   @Post()
@@ -21,8 +21,21 @@ export class AdvertismentController {
     return advertisment;
   }
 
-  private toDTO(ad: Advertisment): AdvertismentDto {
-    const { id, title, description, price, catagory, contactEmail } = ad;
-    return { id, title, description, price, catagory, contactEmail };
+  @Get(':id')
+  async findOne(id: number): Promise<AdvertismentDto> {
+    const advertisment = await this.advertismentService.findOne(id);
+    return advertisment;
+  }
+
+  @Patch(':id')
+  async update(
+    @Body() advertismentDto: AdvertismentDto,
+    @Param('id') id: number,
+  ): Promise<AdvertismentDto> {
+    const advertisment = await this.advertismentService.update(
+      id,
+      advertismentDto,
+    );
+    return advertisment;
   }
 }

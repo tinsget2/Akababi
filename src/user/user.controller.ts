@@ -29,7 +29,7 @@ export class UserController {
     status: 200,
     description: 'The user has been successfully created.',
   })
-  async create(@Body() userDto: UserDto): Promise<UserDto> {
+  async create(@Body() userDto: UserDto): Promise<UserDto | string> {
     const newUser = await this.userService.create(userDto);
     return newUser;
   }

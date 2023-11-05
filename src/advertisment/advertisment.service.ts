@@ -13,7 +13,7 @@ export class AdvertismentService {
 
   async findAll(): Promise<AdvertismentDto[]> {
     const advertisments = await this.advertisment.find();
-    return advertisments.map((ad) => this.toDTO(ad));
+    return advertisments;
   }
 
   async findOne(id: number): Promise<AdvertismentDto> {

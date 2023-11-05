@@ -1,4 +1,5 @@
 import { ChallengeParticipant } from 'src/challengeparticipant/entities/challengeparticipant.entity';
+import { Comment } from 'src/comment/entities/comment.entitiy';
 import { Invitation } from 'src/invitation/entities/invitation.entity';
 import { User } from 'src/user/entities/user.entity';
 import {
@@ -47,4 +48,7 @@ export class Challenge {
 
   @OneToMany(() => Invitation, (invitation) => invitation.challenge)
   invitations: Invitation[];
+
+  @OneToMany(() => Comment, (comment) => comment.challenge)
+  comments: Comment[];
 }
