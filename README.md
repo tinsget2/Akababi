@@ -31,6 +31,7 @@
 ```bash
 $ npm install
 ```
+:port/api       to show swagger api docs.
 
 ## Running the app
 
