@@ -10,7 +10,8 @@ import {
 } from '@nestjs/common';
 import { ChallengepostphotoService } from './challengepostphoto.service';
 import { ChallengePhotoPostDto } from './dto/challengePostPhoto.dto';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('challengepostphoto')
 @Controller('challengepostphoto')
 export class ChallengepostphotoController {
   constructor(

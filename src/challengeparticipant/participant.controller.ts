@@ -10,7 +10,8 @@ import {
 } from '@nestjs/common';
 import { ParticipantService } from './participant.service';
 import { ParticipantDto } from './dto/challengeparticipant.dto';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('participants')
 @Controller('participant')
 export class ParticipantController {
   constructor(private readonly participantService: ParticipantService) {}

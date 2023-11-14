@@ -12,7 +12,8 @@ import { ChallengephotolikeService } from './challengephotolike.service';
 import { ChallengePhotoLikeDto } from './dto/challengephotolike.dto';
 import { ChallengePhotoLike } from './entities/challengephotolike.entity';
 import { async } from 'rxjs';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('challengephotolike')
 @Controller('challengephotolike')
 export class ChallengephotolikeController {
   constructor(

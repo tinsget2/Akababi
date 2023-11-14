@@ -10,7 +10,8 @@ import {
 } from '@nestjs/common';
 import { InvitationService } from './invitation.service';
 import { InvitationDto } from './dto/invitation.dto';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('invitations')
 @Controller('invitation')
 export class InvitationController {
   constructor(private readonly invitationService: InvitationService) {}

@@ -45,6 +45,10 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+# swagger api documentation
+
+naivgate to localhost:port/api
+
 ## Test
 
 ```bash

@@ -10,7 +10,8 @@ import {
 } from '@nestjs/common';
 import { ChallengeDto } from './dto/challenge.dto';
 import { ChallengeService } from './challenge.service';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('challneges')
 @Controller('challenge')
 export class ChallengeController {
   constructor(private readonly challengeService: ChallengeService) {}
