@@ -48,7 +48,7 @@ export class ChallengepostphotoController {
   async update(
     @Param('id') id: number,
     @Body() challengePhotoPostDto: ChallengePhotoPostDto,
-  ): Promise<ChallengePhotoPostDto | string> {
+  ): Promise<ChallengePhotoPostDto | any> {
     const updatedChallengePhotoPost =
       await this.challengephotopostservice.update(id, challengePhotoPostDto);
     return updatedChallengePhotoPost;

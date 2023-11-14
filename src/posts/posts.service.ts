@@ -11,47 +11,77 @@ export class PostsService {
     private postRepository: Repository<Post>,
   ) {}
   async create(createPostDto: CreatePostDto) {
-    const newPost = this.postRepository.create(createPostDto);
-    return this.postRepository.save(newPost);
+    try {
+      const newPost = this.postRepository.create(createPostDto);
+      return this.postRepository.save(newPost);
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
+    }
   }
 
   async findAll() {
-    const posts = await this.postRepository.find();
-    if (!posts) {
-      return new NotAcceptableException('No posts found');
+    try {
+      const posts = await this.postRepository.find();
+      if (!posts) {
+        return new NotAcceptableException('No posts found');
+      }
+      return posts;
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
     }
-    return posts;
   }
 
   async findOne(id: number) {
-    const post = await this.postRepository.findOne({ where: { id } });
-    if (!post) {
-      return new NotAcceptableException(`Post with id ${id} not found`);
+    try {
+      const post = await this.postRepository.findOne({ where: { id } });
+      if (!post) {
+        return new NotAcceptableException(`Post with id ${id} not found`);
+      }
+      return post;
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
     }
-    return post;
   }
 
   async update(id: number, updatePostDto: UpdatePostDto) {
-    const post = await this.postRepository.findOne({ where: { id } });
-    if (!post) {
-      return new NotAcceptableException(`Post with id ${id} not found`);
+    try {
+      const post = await this.postRepository.findOne({ where: { id } });
+      if (!post) {
+        return new NotAcceptableException(`Post with id ${id} not found`);
+      }
+      const updatedPost = { ...post, ...updatePostDto };
+      await this.postRepository.save(updatedPost);
+      return {
+        message: 'Post updated',
+        updatedPost,
+      };
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
     }
-    const updatedPost = { ...post, ...updatePostDto };
-    await this.postRepository.save(updatedPost);
-    return {
-      message: 'Post updated',
-      updatedPost,
-    };
   }
 
   async remove(id: number) {
-    const post = await this.postRepository.findOne({ where: { id } });
-    if (!post) {
-      return new NotAcceptableException(`Post with id ${id} not found`);
+    try {
+      const post = await this.postRepository.findOne({ where: { id } });
+      if (!post) {
+        return new NotAcceptableException(`Post with id ${id} not found`);
+      }
+      await this.postRepository.delete(id);
+      return {
+        message: 'Post deleted',
+      };
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
     }
-    await this.postRepository.delete(id);
-    return {
-      message: 'Post deleted',
-    };
   }
 }

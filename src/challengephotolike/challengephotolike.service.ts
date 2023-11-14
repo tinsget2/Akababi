@@ -11,67 +11,98 @@ export class ChallengephotolikeService {
     private challengePhotolikeRepository: Repository<ChallengePhotoLike>,
   ) {}
 
-  async findAll(): Promise<ChallengePhotoLikeDto[]> {
-    const challengephotolike = await this.challengePhotolikeRepository.find();
-    if (!challengephotolike) {
-      throw new NotFoundException('There are no challengephotolike');
+  async findAll(): Promise<ChallengePhotoLikeDto[] | any> {
+    try {
+      const challengephotolike = await this.challengePhotolikeRepository.find();
+      if (!challengephotolike) {
+        throw new NotFoundException('There are no challengephotolike');
+      }
+      return challengephotolike;
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
     }
-    return challengephotolike;
   }
 
   async create(
     challengePhotoLikeDto: ChallengePhotoLikeDto,
-  ): Promise<ChallengePhotoLikeDto> {
-    const challengephotolike = this.challengePhotolikeRepository.create(
-      challengePhotoLikeDto,
-    );
-    await this.challengePhotolikeRepository.save(challengePhotoLikeDto);
-    return challengephotolike;
+  ): Promise<ChallengePhotoLikeDto | any> {
+    try {
+      const challengephotolike = this.challengePhotolikeRepository.create(
+        challengePhotoLikeDto,
+      );
+      await this.challengePhotolikeRepository.save(challengePhotoLikeDto);
+      return challengephotolike;
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
+    }
   }
 
-  async findOne(id: number): Promise<ChallengePhotoLikeDto | string> {
-    const challengephotolike = await this.challengePhotolikeRepository.findOne({
-      where: { id },
-    });
-    if (!challengephotolike) {
-      throw new NotFoundException(
-        'There is no challengephotolike with this id',
-      );
+  async findOne(id: number): Promise<ChallengePhotoLikeDto | any> {
+    try {
+      const challengephotolike =
+        await this.challengePhotolikeRepository.findOne({
+          where: { id },
+        });
+      if (!challengephotolike) {
+        throw new NotFoundException(
+          'There is no challengephotolike with this id',
+        );
+      }
+      console.log(challengephotolike);
+      return challengephotolike;
+    } catch (error) {
+      return { message: `Something went wrong ${error.message}` };
     }
-    console.log(challengephotolike);
-    return challengephotolike;
   }
 
   async update(
     id: number,
     challengePhotoLikeDto: ChallengePhotoLikeDto,
-  ): Promise<ChallengePhotoLikeDto | string> {
-    const challengephotolike = await this.challengePhotolikeRepository.findOne({
-      where: { id },
-    });
-    if (!challengephotolike) {
-      throw new NotFoundException(
-        'There is no challengephotolike with this id',
-      );
+  ): Promise<ChallengePhotoLikeDto | any> {
+    try {
+      const challengephotolike =
+        await this.challengePhotolikeRepository.findOne({
+          where: { id },
+        });
+      if (!challengephotolike) {
+        throw new NotFoundException(
+          'There is no challengephotolike with this id',
+        );
+      }
+      const updatedChallengePhotoLike = {
+        ...challengephotolike,
+        ...challengePhotoLikeDto,
+      };
+      await this.challengePhotolikeRepository.save(updatedChallengePhotoLike);
+      return updatedChallengePhotoLike;
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
     }
-    const updatedChallengePhotoLike = {
-      ...challengephotolike,
-      ...challengePhotoLikeDto,
-    };
-    await this.challengePhotolikeRepository.save(updatedChallengePhotoLike);
-    return updatedChallengePhotoLike;
   }
 
-  async delete(id: number): Promise<string> {
-    const challengephotolike = await this.challengePhotolikeRepository.findOne({
-      where: { id },
-    });
-    if (!challengephotolike) {
-      throw new NotFoundException(
-        'There is no challengephotolike with this id',
-      );
+  async delete(id: number): Promise<string | any> {
+    try {
+      const challengephotolike =
+        await this.challengePhotolikeRepository.findOne({
+          where: { id },
+        });
+      if (!challengephotolike) {
+        throw new NotFoundException(
+          'There is no challengephotolike with this id',
+        );
+      }
+      await this.challengePhotolikeRepository.delete(id);
+      return `challengephotolike with id ${id} deleted`;
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
     }
-    await this.challengePhotolikeRepository.delete(id);
-    return `challengephotolike with id ${id} deleted`;
   }
 }

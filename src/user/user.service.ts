@@ -11,58 +11,88 @@ export class UserService {
     private userRepository: Repository<User>,
   ) {}
 
-  async findAll(): Promise<UserDto[]> {
-    const users = await this.userRepository.find({
-      relations: ['challenges', 'challenges.participants'],
-    });
-    if (!users) {
-      throw new NotFoundException(`User not found`);
+  async findAll(): Promise<UserDto[] | any | string> {
+    try {
+      const users = await this.userRepository.find({
+        relations: ['challenges', 'challenges.participants'],
+      });
+      if (!users) {
+        throw new NotFoundException(`User not found`);
+      }
+      return users;
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
     }
-    return users;
   }
 
-  async findOne(id: number): Promise<UserDto | string> {
-    const user = await this.userRepository.findOne({
-      where: { id },
-      relations: ['challenges'],
-    });
-    if (!user) {
-      throw new NotFoundException(`User with id ${id} not found`);
+  async findOne(id: number): Promise<UserDto | string | any> {
+    try {
+      const user = await this.userRepository.findOne({
+        where: { id },
+        relations: ['challenges'],
+      });
+      if (!user) {
+        throw new NotFoundException(`User with id ${id} not found`);
+      }
+      return user;
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
     }
-    return user;
   }
 
   async create(userDto: UserDto): Promise<UserDto | any> {
-    const newUser = this.userRepository.create(userDto);
-    const existingUser = await this.userRepository.findOne({
-      where: { email: userDto.email },
-    });
-    if (existingUser) {
-      return { message: `User with email ${userDto.email} already exists` };
+    try {
+      const newUser = this.userRepository.create(userDto);
+      const existingUser = await this.userRepository.findOne({
+        where: { email: userDto.email },
+      });
+      if (existingUser) {
+        return { message: `User with email ${userDto.email} already exists` };
+      }
+      await this.userRepository.save(newUser);
+      return {
+        message: `User created successfully`,
+        user: newUser,
+      };
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
     }
-    await this.userRepository.save(newUser);
-    return {
-      message: `User created successfully`,
-      user: newUser,
-    };
   }
 
-  async update(id: number, userDto: UserDto): Promise<UserDto> {
-    const user = await this.userRepository.findOne({ where: { id } });
-    if (!user) {
-      return;
+  async update(id: number, userDto: UserDto): Promise<UserDto | any | string> {
+    try {
+      const user = await this.userRepository.findOne({ where: { id } });
+      if (!user) {
+        return;
+      }
+      const updatedUser = { ...user, ...userDto };
+      await this.userRepository.save(updatedUser);
+      return updatedUser;
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
     }
-    const updatedUser = { ...user, ...userDto };
-    await this.userRepository.save(updatedUser);
-    return updatedUser;
   }
 
-  async delete(id: number): Promise<string> {
-    const user = await this.userRepository.findOne({ where: { id } });
-    if (!user) {
-      return `User with id ${id} not found`;
+  async delete(id: number): Promise<string | string | any> {
+    try {
+      const user = await this.userRepository.findOne({ where: { id } });
+      if (!user) {
+        return `User with id ${id} not found`;
+      }
+      await this.userRepository.delete(id);
+      return `User with id ${id} deleted`;
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
     }
-    await this.userRepository.delete(id);
-    return `User with id ${id} deleted`;
   }
 }

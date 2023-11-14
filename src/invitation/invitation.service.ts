@@ -16,46 +16,70 @@ export class InvitationService {
     return newInvitation;
   }
 
-  async findAll(): Promise<InvitationDto[]> {
-    const invitations = await this.invitationRepository.find();
-    if (!invitations) {
-      throw new NotFoundException('There are no invitations');
+  async findAll(): Promise<InvitationDto[] | any | string> {
+    try {
+      const invitations = await this.invitationRepository.find();
+      if (!invitations) {
+        throw new NotFoundException('There are no invitations');
+      }
+      return invitations;
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
     }
-    return invitations;
   }
 
-  async findOne(id: number): Promise<InvitationDto | string> {
-    const invitation = await this.invitationRepository.findOne({
-      where: { id },
-    });
-    if (!invitation) {
-      throw new NotFoundException(`Invitation with id ${id} not found`);
+  async findOne(id: number): Promise<InvitationDto | string | any> {
+    try {
+      const invitation = await this.invitationRepository.findOne({
+        where: { id },
+      });
+      if (!invitation) {
+        throw new NotFoundException(`Invitation with id ${id} not found`);
+      }
+      return invitation;
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
     }
-    return invitation;
   }
 
   async update(
     id: number,
     invitationDto: InvitationDto,
-  ): Promise<InvitationDto | string> {
-    const invitation = await this.invitationRepository.findOne({
-      where: { id },
-    });
-    if (!invitation) {
-      throw new NotFoundException(`Invitation with id ${id} not found`);
+  ): Promise<InvitationDto | string | any> {
+    try {
+      const invitation = await this.invitationRepository.findOne({
+        where: { id },
+      });
+      if (!invitation) {
+        throw new NotFoundException(`Invitation with id ${id} not found`);
+      }
+      await this.invitationRepository.update(id, invitationDto);
+      return invitation;
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
     }
-    await this.invitationRepository.update(id, invitationDto);
-    return invitation;
   }
 
-  async delete(id: number): Promise<string> {
-    const invitation = await this.invitationRepository.findOne({
-      where: { id },
-    });
-    if (!invitation) {
-      throw new NotFoundException(`Invitation with id ${id} not found`);
+  async delete(id: number): Promise<string | any> {
+    try {
+      const invitation = await this.invitationRepository.findOne({
+        where: { id },
+      });
+      if (!invitation) {
+        throw new NotFoundException(`Invitation with id ${id} not found`);
+      }
+      await this.invitationRepository.delete(id);
+      return `Invitation with id ${id} deleted`;
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
     }
-    await this.invitationRepository.delete(id);
-    return `Invitation with id ${id} deleted`;
   }
 }

@@ -17,19 +17,19 @@ export class ChallengeController {
   constructor(private readonly challengeService: ChallengeService) {}
 
   @Get()
-  async findAll(): Promise<ChallengeDto[] | string> {
+  async findAll() {
     const challengs = await this.challengeService.findAll();
     return challengs;
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: number): Promise<ChallengeDto | string> {
+  async findOne(@Param('id') id: number) {
     const challenge = await this.challengeService.findOne(id);
     return challenge;
   }
 
   @Post()
-  async create(@Body() challegeDto: ChallengeDto): Promise<ChallengeDto> {
+  async create(@Body() challegeDto: ChallengeDto) {
     const challenge = await this.challengeService.create(challegeDto);
     return challenge;
   }
@@ -38,7 +38,7 @@ export class ChallengeController {
   async update(
     @Param('id') id: number,
     challegeDto: ChallengeDto,
-  ): Promise<ChallengeDto | string> {
+  ): Promise<ChallengeDto | any> {
     const updatedChallenge = await this.challengeService.update(
       id,
       challegeDto,

@@ -11,58 +11,90 @@ export class ChallengepostphotoService {
     private challengePhotoPostRepository: Repository<ChallengePhotoPost>,
   ) {}
 
-  async findAll(): Promise<ChallengePhotoPostDto[]> {
-    const challengePhotoPost = await this.challengePhotoPostRepository.find({
-      relations: ['challengePhotoLike', 'challengeParticipant'],
-    });
-    if (!challengePhotoPost) {
-      throw new NotFoundException('There are no contents');
+  async findAll(): Promise<ChallengePhotoPostDto[] | any> {
+    try {
+      const challengePhotoPost = await this.challengePhotoPostRepository.find({
+        relations: ['challengePhotoLike', 'challengeParticipant'],
+      });
+      if (!challengePhotoPost) {
+        throw new NotFoundException('There are no contents');
+      }
+      return challengePhotoPost;
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
     }
-    return challengePhotoPost;
   }
 
-  async findOne(id: number): Promise<ChallengePhotoPostDto | string> {
-    const challengePhotoPost = await this.challengePhotoPostRepository.findOne({
-      where: { id },
-      relations: ['challengePhotoLike'],
-    });
-    if (!challengePhotoPost) {
-      throw new NotFoundException('There Is no content with this id');
+  async findOne(id: number): Promise<ChallengePhotoPostDto | any> {
+    try {
+      const challengePhotoPost =
+        await this.challengePhotoPostRepository.findOne({
+          where: { id },
+          relations: ['challengePhotoLike'],
+        });
+      if (!challengePhotoPost) {
+        throw new NotFoundException('There Is no content with this id');
+      }
+      return challengePhotoPost;
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
     }
-    return challengePhotoPost;
   }
 
   async create(
     challengePhotoPost: ChallengePhotoPostDto,
-  ): Promise<ChallengePhotoPost> {
-    const challenegPhotoPost =
-      this.challengePhotoPostRepository.create(challengePhotoPost);
-    await this.challengePhotoPostRepository.save(challenegPhotoPost);
-    return challenegPhotoPost;
+  ): Promise<ChallengePhotoPost | any> {
+    try {
+      const challenegPhotoPost =
+        this.challengePhotoPostRepository.create(challengePhotoPost);
+      await this.challengePhotoPostRepository.save(challenegPhotoPost);
+      return challenegPhotoPost;
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
+    }
   }
 
   async update(id: number, challengePhotoPost: ChallengePhotoPostDto) {
-    const challengePhotoPostToUpdate =
-      await this.challengePhotoPostRepository.findOne({ where: { id } });
-    if (!challengePhotoPostToUpdate) {
-      throw new NotFoundException('There is no content with this id');
+    try {
+      const challengePhotoPostToUpdate =
+        await this.challengePhotoPostRepository.findOne({ where: { id } });
+      if (!challengePhotoPostToUpdate) {
+        throw new NotFoundException('There is no content with this id');
+      }
+      const updatedChallengePhotoPost = {
+        ...challengePhotoPostToUpdate,
+        ...challengePhotoPost,
+      };
+      await this.challengePhotoPostRepository.save(updatedChallengePhotoPost);
+      return updatedChallengePhotoPost;
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
     }
-    const updatedChallengePhotoPost = {
-      ...challengePhotoPostToUpdate,
-      ...challengePhotoPost,
-    };
-    await this.challengePhotoPostRepository.save(updatedChallengePhotoPost);
-    return updatedChallengePhotoPost;
   }
 
-  async delete(id: number): Promise<string> {
-    const challengePhotoPost = await this.challengePhotoPostRepository.findOne({
-      where: { id },
-    });
-    if (!challengePhotoPost) {
-      throw new NotFoundException('There is no content with this id');
+  async delete(id: number): Promise<string | any> {
+    try {
+      const challengePhotoPost =
+        await this.challengePhotoPostRepository.findOne({
+          where: { id },
+        });
+      if (!challengePhotoPost) {
+        throw new NotFoundException('There is no content with this id');
+      }
+      await this.challengePhotoPostRepository.delete(id);
+      return `Content with id ${id} deleted`;
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
     }
-    await this.challengePhotoPostRepository.delete(id);
-    return `Content with id ${id} deleted`;
   }
 }

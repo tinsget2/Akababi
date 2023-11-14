@@ -11,56 +11,83 @@ export class ChallengeService {
     private challengeRepository: Repository<Challenge>,
   ) {}
 
-  async findAll(): Promise<ChallengeDto[] | string> {
-    const challengs = await this.challengeRepository.find({
-      relations: ['participants'],
-    });
+  async findAll() {
+    try {
+      const challengs = await this.challengeRepository.find({
+        relations: ['participants'],
+      });
 
-    if (!challengs) {
-      throw new NotFoundException('There is no challenge');
+      if (!challengs) {
+        throw new NotFoundException('There is no challenge');
+      }
+      return challengs;
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
     }
-    return challengs;
   }
 
-  async findOne(id: number): Promise<ChallengeDto | string> {
-    const challenge = await this.challengeRepository.findOne({
-      where: { id },
-      relations: ['participants'],
-    });
+  async findOne(id: number) {
+    try {
+      const challenge = await this.challengeRepository.findOne({
+        where: { id },
+        relations: ['participants'],
+      });
 
-    if (!challenge) {
-      throw new NotFoundException('There is no challenge with this id');
+      if (!challenge) {
+        throw new NotFoundException('There is no challenge with this id');
+      }
+      return challenge;
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
     }
-    return challenge;
   }
 
-  async create(challngeDto: ChallengeDto): Promise<ChallengeDto> {
-    const challenge = this.challengeRepository.create(challngeDto);
-    await this.challengeRepository.save(challenge);
-    return challenge;
+  async create(challngeDto: ChallengeDto) {
+    try {
+      const challenge = this.challengeRepository.create(challngeDto);
+      await this.challengeRepository.save(challenge);
+      return challenge;
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
+    }
   }
 
-  async update(
-    id: number,
-    challengeDto: ChallengeDto,
-  ): Promise<ChallengeDto | string> {
-    const challenge = this.challengeRepository.findOne({ where: { id } });
-    if (!challenge) {
-      throw new NotFoundException('challenge not found');
+  async update(id: number, challengeDto: ChallengeDto) {
+    try {
+      const challenge = this.challengeRepository.findOne({ where: { id } });
+      if (!challenge) {
+        throw new NotFoundException('challenge not found');
+      }
+      const updatedChallenge = { ...challenge, ...challengeDto };
+      await this.challengeRepository.save(updatedChallenge);
+      return updatedChallenge;
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
     }
-    const updatedChallenge = { ...challenge, ...challengeDto };
-    await this.challengeRepository.save(updatedChallenge);
-    return updatedChallenge;
   }
 
-  async delete(id: number): Promise<string> {
-    const challenge = await this.challengeRepository.findOne({
-      where: { id },
-    });
-    if (!challenge) {
-      throw new NotFoundException('challenge not found');
+  async delete(id: number): Promise<string | any> {
+    try {
+      const challenge = await this.challengeRepository.findOne({
+        where: { id },
+      });
+      if (!challenge) {
+        throw new NotFoundException('challenge not found');
+      }
+      await this.challengeRepository.delete(id);
+      return `Challenge with id ${id} deleted`;
+    } catch (error) {
+      return {
+        message: `Something went wrong ${error.message}`,
+      };
     }
-    await this.challengeRepository.delete(id);
-    return `Challenge with id ${id} deleted`;
   }
 }
